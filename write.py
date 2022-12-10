@@ -42,7 +42,7 @@ if __name__ == "__main__":
     x = dt.datetime.now()
     today = str(x.year) + '-' + str(x.month) + '-' + str(x.day)
     # 추천도서를 가져올 웹사이트 URL 정보
-    url = 'http://www.yes24.com/24/Category/Display/001005033'
+    url = 'http://www.yes24.com/24/Category/Display/001005033043'
     t_title = "당신을 위한 오늘의 추천 도서 (" + today +")"
         
     # url 정보 수집하기
