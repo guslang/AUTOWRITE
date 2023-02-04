@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import sys
 
 # url 정보 수집하기
 url = 'http://www.yes24.com/24/Category/BestSeller?CategoryNumber=001&sumgb=06'
@@ -11,6 +12,7 @@ if response.status_code == 200:
     soup = BeautifulSoup(html, 'html5lib')        
 else : 
     print(response.status_code)
+    sys.exit(0)
     
 # 제목          
 bookTitles = soup.select('#category_layout > tbody > tr:nth-child(1) > td.goodsTxtInfo > p:nth-child(1) > a:nth-child(1)')
