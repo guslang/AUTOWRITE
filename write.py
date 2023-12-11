@@ -51,22 +51,22 @@ if __name__ == "__main__":
     # status_code가 200이면 정상
     if response.status_code == 200:
         html = response.text
-        soup = BeautifulSoup(html, 'html5lib')        
+        soup = BeautifulSoup(html, 'html.parser')        
     else : 
         print(response.status_code)
     
     # 제목          
-    bookTitles = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_name')
-    bookTitle = bookTitles[0].text        
+    bookTitles = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_name > a:nth-child(2)')
+    bookTitle = bookTitles[0].text.strip()        
     # 저자
     auths = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_pubGrp > span.goods_auth')
-    auth = auths[0].text
-    # 가격/
-    prices = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_price')
-    price = prices[0].text
+    auth = auths[0].text.strip()
+    # 가격
+    prices = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_price > em.yes_b')
+    price = prices[0].text.strip() + '원'
     # 요약
     summarys = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_read')
-    summary = summarys[0].text
+    summary = summarys[0].text.strip()
     # 이미지                      
     bookImgs = soup.select('#category_layout > ul > li:nth-child(1) > div > p > span > span > a > img')
     bookImg = bookImgs[0].attrs['src']   
@@ -89,6 +89,6 @@ if __name__ == "__main__":
     publishedDt = None   # 발행시간 (TIMESTAMP 이며 미래의 시간을 넣을 경우 예약. 기본값: 현재시간)    
     # 티스토리 API 이용하여 포스트 등록
     postWrite(blog_name=blogName, title=t_title, content=content, visibility=visiblityCd, category_id=categoryId, 
-              published=publishedDt, slogan=None, tag=tagName, acceptComment=None, password=None, output_type="json")
+               published=publishedDt, slogan=None, tag=tagName, acceptComment=None, password=None, output_type="json")
     
     print("글 등록 완료")
