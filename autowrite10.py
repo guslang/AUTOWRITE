@@ -42,7 +42,7 @@ if __name__ == "__main__":
     x = dt.datetime.now()
     today = str(x.year) + '-' + str(x.month) + '-' + str(x.day)
     
-    url = 'http://www.yes24.com/24/Category/BestSeller?CategoryNumber=001&sumgb=06'
+    url = 'https://www.yes24.com/Product/Category/BestSeller?categoryNumber=001'
     t_title = "YES24 종합 베스트셀러 Top 10(" + today +")"
         
     # url 정보 수집하기
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     # status_code가 200이면 정상
     if response.status_code == 200:
         html = response.text
-        soup = BeautifulSoup(html, 'html5lib')        
+        soup = BeautifulSoup(html, 'html.parser')        
     else : 
         print(response.status_code)
          
@@ -63,27 +63,27 @@ if __name__ == "__main__":
     # 1위부터 10위까지 베스트 셀러 정보 가져오기
     for i in range(1,11,1):
         # 제목          
-        bookTitles = soup.select('#category_layout > tbody > tr:nth-child(' + str(j) + ') > td.goodsTxtInfo > p:nth-child(1) > a:nth-child(1)')
+        bookTitles = soup.select('#yesBestList > li:nth-child(' + str(j) + ') > div > div.item_info > div.info_row.info_name > a.gd_name')
         bookTitle = bookTitles[0].text        
         # 저자/출판사/발행월
-        auths = soup.select('#category_layout > tbody > tr:nth-child(' + str(j) + ') > td.goodsTxtInfo > div')
+        auths = soup.select('#yesBestList > li:nth-child(' + str(j) + ') > div > div.item_info > div.info_row.info_pubGrp')
         auth = auths[0].text.replace('\n', ' ').replace('\r', '').replace('\t','').strip()               
         # 가격/        
-        prices = soup.select('#category_layout > tbody > tr:nth-child(' + str(j) + ') > td.goodsTxtInfo > p:nth-child(3)')
+        prices = soup.select('#yesBestList > li:nth-child(' + str(j) + ') > div > div.item_info > div.info_row.info_price > strong')
         price = prices[0].text.replace('\n', ' ').replace('\r', '').replace('\t', '').strip()        
         # 요약
-        summarys = soup.select('#category_layout > tbody > tr:nth-child(' + str(k) + ') > td:nth-child(2) > p')
-        summary = summarys[0].text.replace('\n', ' ').replace('\r', '').replace('\t', '').strip()        
-        # 이미지                              
-        bookImgs = soup.select('#category_layout > tbody > tr:nth-child(' + str(j) + ') > td.image > div > a:nth-child(1) > img')
-        bookImg = (bookImgs[0].attrs['src'].split('/'))[4]      # '/' 기준으로 이미지 URL을 구분하여 5번째 정보(ID)를 가져온다.
+        # summarys = soup.select('#category_layout > tbody > tr:nth-child(' + str(k) + ') > td:nth-child(2) > p')
+        # summary = summarys[0].text.replace('\n', ' ').replace('\r', '').replace('\t', '').strip()        
+        # 이미지      
+        bookImgs = soup.select('#yesBestList > li:nth-child(' + str(j) + ') > div > div.item_img > div.img_canvas > span > span > a > em > img')
+        bookImg = (bookImgs[0].attrs['data-original'].split('/'))[4]      # '/' 기준으로 이미지 URL을 구분하여 5번째 정보(ID)를 가져온다.
         
         # 출력 포맷     
         content  = '<h3 data-ke-size="size23"><b>' + str(i) + '. ' + bookTitle + '</b></h3>'
         content += '<ul style="list-style-type: disc;" data-ke-list-type="disc">'        
         content += '<li>' + auth + '</li>'
         content += '<li>' + price + '</li>'
-        content += '<li>' + summary + '</li>'
+        # content += '<li>' + summary + '</li>'
         content += '</ul>'
         content += '<figure data-ke-type="emoticon" data-ke-align="alignCenter" data-emoticon-isanimation="false"><img src="https://image.yes24.com/goods/' + \
             bookImg +'/L" width="300" alt="' + bookTitle + '"/></figure>'        
