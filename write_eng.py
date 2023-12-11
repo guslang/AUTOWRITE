@@ -23,23 +23,23 @@ if __name__ == "__main__":
     # status_code가 200이면 정상
     if response.status_code == 200:
         html = response.text
-        soup = BeautifulSoup(html, 'html5lib')        
+        soup = BeautifulSoup(html, 'html.parser')        
     else : 
         print(response.status_code)
         sys.exit(0)
     
     # 제목          
-    bookTitles = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_name')
-    bookTitle = papagoAPI.translate(bookTitles[0].text) + "(" + bookTitles[0].text +")"
+    bookTitles = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_name > a:nth-child(2)')    
+    bookTitle = papagoAPI.translate(bookTitles[0].text.strip()) + "(" + bookTitles[0].text.strip() +")"
     # 저자
     auths = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_pubGrp > span.goods_auth')
-    auth = papagoAPI.translate(auths[0].text) + "(" + auths[0].text +")"
-    # 가격/
-    prices = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_price')
-    price = papagoAPI.translate(prices[0].text)
+    auth = papagoAPI.translate(auths[0].text.strip()) + "(" + auths[0].text.strip() +")"    
+    # 가격
+    prices = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_price > em.yes_b')
+    price = papagoAPI.translate(prices[0].text.strip() + '원')    
     # 요약
     summarys = soup.select('#category_layout > ul > li:nth-child(1) > div > div.goods_info > div.goods_read')
-    summary = papagoAPI.translate(summarys[0].text)
+    summary = papagoAPI.translate(summarys[0].text.strip())
     # 이미지                      
     bookImgs = soup.select('#category_layout > ul > li:nth-child(1) > div > p > span > span > a > img')
     bookImg = bookImgs[0].attrs['src']   
@@ -71,6 +71,3 @@ if __name__ == "__main__":
         print("글 등록 완료")
     except Exception as e: 
         print('예외가 발생했습니다.', e)
-    
-    
-    
